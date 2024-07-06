@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cross-Stitch Skein Calculator</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'Gotham Book';
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Book.eot');
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Book.eot?#iefix') format('embedded-opentype'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Book.woff2') format('woff2'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Book.woff') format('woff'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Book.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Gotham';
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Light.eot');
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Light.eot?#iefix') format('embedded-opentype'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Light.woff2') format('woff2'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Light.woff') format('woff'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Gotham';
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Black.eot');
+            src: url('https://cielsilverbooks.com/fonts/Gotham-Black.eot?#iefix') format('embedded-opentype'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Black.woff2') format('woff2'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Black.woff') format('woff'),
+                url('https://cielsilverbooks.com/fonts/Gotham-Black.ttf') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+
+        *, html * {
+            box-sizing: border-box;
+        }
+
+        html {
+            padding: 0;
+            margin: 0;
+            background-color: #202020;
+            font-family: "Gotham Book", Helvetica, sans-serif;
+            font-size: 16px;
+        }
+
+        body {
+            padding: 0 10px;
+            max-width: 500px;
+            margin: auto;
+            color: #eeeeee;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-family: "Gotham Book", Helvetica, sans-serif;
+            letter-spacing: 1px;
+        }
+
+        form {
+            background-color: #252525;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            width: 100%;
+            padding-right: 5px;
+        }
+
+        .field-group {
+                width: 32%;
+                display: inline-block;
+                margin-bottom: 0;
+                vertical-align: baseline;
+                padding: 0 5px;
+            }
+
+        .mb0 {
+            margin-bottom: 0;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 5px 8px;
+            border: none;
+            background-color: #333333;
+            color: #eeeeee;
+            border-radius: 2px;
+            font-size: 16px;
+            font-family: "Gotham Book", Helvetica, sans-serif;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        input:last-of-type {
+            margin-bottom: 0px !important;
+        }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            display: none;
+        }
+
+        input:focus, input:hover, input:active {
+            outline: none;
+        }
+
+        input:focus {
+            background-color: #3b3b3b;
+        }
+
+        input, thead, td.cloth-type {
+            font-family: "Gotham Light", sans-serif;
+            font-weight: bold;
+            letter-spacing: .5px;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .table-wrapper {
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        thead {
+            background-color: #333333;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .table-heading:first-of-type {
+            border-top-left-radius: 5px;
+        }
+
+        .table-heading:last-of-type {
+            border-top-right-radius: 5px;
+        }
+
+        th, td {
+            padding: 5px 10px;
+        }
+
+        td.cloth-type {
+            background-color: rgba(128, 128, 128, 0.05);
+            min-width: 200px;
+        }
+
+        td.skeins-used {
+           border-right: 2px solid rgba(128, 128, 128, 0.05);
+        }
+
+        tr.alternate-gray:nth-child(odd) {
+            background-color: #292929;
+        }
+
+        tr:last-of-type td.cloth-type {
+            border-bottom-left-radius: 5px;
+        }
+
+        td#skeins_to_buy_32 {
+            border-bottom-right-radius: 5px;
+        }
+
+    </style>
+  </head>
+  <body>
+    <h1>Skein Use Estimator</h1>
+
+    <form id="skein-estimator">
+        <div class="field-group"><label for="strands">Strands Per Stitch: </label><input id="strands" name="strands"type="number" min="1" max="6" value="2" required /></div>
+        <div class="field-group"><label for="skein-length">Skein Length (meters): </label><input id="skein-length" name="skein-length" type="number" value="8" min="1" required /></div>
+        <div class="field-group mb0"><label for="stitches">Number of Stitches: </label><input id="stitches" name="stitches" type="number" value="500" min="1" required /></div>
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="table-heading left" width="200">Fabric Count</th>
+                    <th class="table-heading right" width="120">Skeins</th>
+                    <th class="table-heading right" width="120">Purchase</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">11 Count Aida</td>
+                    <td id="skeins_used_11" class="right">0.35</td>
+                    <td id="skeins_to_buy_11" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">14 Count Aida</td>
+                    <td id="skeins_used_14" class="right">0.27</td>
+                    <td id="skeins_to_buy_14" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">16 Count Aida</td>
+                    <td id="skeins_used_16" class="right">0.24</td>
+                    <td id="skeins_to_buy_16" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">18 Count Aida</td>
+                    <td id="skeins_used_18" class="right">0.21</td>
+                    <td id="skeins_to_buy_18" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">20 Count Aida</td>
+                    <td id="skeins_used_20" class="right">0.19</td>
+                    <td id="skeins_to_buy_20" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">22 Count Hardanger</td>
+                    <td id="skeins_used_22" class="right">0.17</td>
+                    <td id="skeins_to_buy_22" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">25 Count Fabric</td>
+                    <td id="skeins_used_25" class="right">0.15</td>
+                    <td id="skeins_to_buy_25" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">28 Count Fabric</td>
+                    <td id="skeins_used_28" class="right">0.14</td>
+                    <td id="skeins_to_buy_28" class="right">1</td>
+                </tr>
+                <tr class="alternate-gray">
+                    <td class="cloth-type left">32 Count Fabric</td>
+                    <td id="skeins_used_32" class="right">0.12</td>
+                    <td id="skeins_to_buy_32" class="right">1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+	<script type="text/javascript">   
+        function getSkeins() {
+            const strands_used = Number(document.querySelector("#strands").value);
+            const skein_length = Number(document.querySelector("#skein-length").value);
+            const stitches = Number(document.querySelector("#stitches").value);
+            const cloth_count = [11, 14, 16, 18, 20, 22, 25, 28, 32];
+
+            let i = 0;
+
+            while (i < cloth_count.length) {
+                // Calculate stitches per skein, number of skeins used, and number to buy
+                stitches_per_skein = ((skein_length * 39.37)/18) * (15 / (6/cloth_count[i])) * (6/strands_used);
+                // skeins_used = (Math.ceil((stitches / stitches_per_skein) / 0.25) * 0.25).toFixed(2);
+                skeins_used = (stitches / stitches_per_skein).toFixed(2);
+                skeins_to_buy = Math.ceil(skeins_used);
+
+                // Assemble id string for content placement based on cloth count
+                id_used = "skeins_used_" + cloth_count[i];
+                id_buy = "skeins_to_buy_" + cloth_count[i];
+
+                // Place results in table row
+                document.getElementById(id_used).innerHTML = skeins_used;
+                document.getElementById(id_buy).innerHTML = skeins_to_buy;
+
+                i++;
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const skein_estimator = document.querySelector('#skein-estimator');
+
+            // Listen for keyup and change events
+            ['keyup', 'change'].forEach((type) => {
+                // Add listeners to the form
+                skein_estimator.addEventListener(type, (event) => {
+                    // Check if the event was fired from an input number box
+                    if (event.target.matches('input[type="number"]')) {
+                        getSkeins();
+                    }
+                }) 
+            })
+        });
+    </script>
+  </body>
+</html>
